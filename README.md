@@ -4,21 +4,21 @@ Pentaho Data Integration ( ETL ) a.k.a Kettle
 
 ### Project Structure
 
-* **assemblies:** 
-Project distribution archive is produced under this module
-* **core:** 
+* **[assemblies:](assemblies)** 
+Project distribution archives
+* **[core:](core)** 
 Core implementation
-* **dbdialog:** 
+* **[dbdialog:](dbdialog)** 
 Database dialog
-* **ui:** 
+* **[ui:](ui)** 
 User interface
-* **engine:** 
-PDI engine
-* **engine-ext:** 
-PDI engine extensions
-* **[plugins:](plugins/README.md)** 
-PDI core plugins
-* **integration:** 
+* **[engine:](engine)** 
+Engine implementation
+* **[engine-ext:](engine-ext)** 
+Engine extensions
+* **[plugins:](plugins)**
+Core plugins
+* **[integration:](integration)** 
 Integration tests
 
 ### Pre-requisites for building the project:
@@ -38,7 +38,9 @@ $ mvn clean install -Drelease
 ```
 
 This will build, unit test, and package the whole project (all of the sub-modules). 
-The artifact will be generated in: ```target```
+The artifact will be generated in the `target` folders of each module. 
+
+The main distributable archive can currently be found on `assemblies/pdi-ce/target` after a build as been completed.
 
 __Build for CI/dev__
 
@@ -51,9 +53,34 @@ $ mvn clean install
 
 __Build a subset of modules__
 
+Currently there are profiles that allow you to build only a part of the project.
 
-TODO: list profiles
+* **base:**
+Builds the main modules those being **engine**, **core**, **dbdialog**, **ui** and **pdi-extensions**.
 
+```
+mvn clean install -DskipDefault -Pbase
+```
+
+* **plugins:**
+Builds the plugins. Plugins are divided between **highdeps** and **lowdeps** because of external project dependencies
+that force us to build them on a specific order on the stack. That will be addressed in the future, but for now 
+this division is necessary.
+
+```
+mvn clean install -DskipDefault -Pplugins,highdeps
+```
+
+```
+mvn clean install -DskipDefault -Pplugins,lowdeps
+```
+
+* **assemblies:**
+Packages the project into it's distributable form.
+
+```
+mvn clean install -DskipDefault -Passemblies
+```
 
 ### Running the tests
 
@@ -71,6 +98,7 @@ $ mvn test -Dtest=<<YourTest>> -Dmaven.surefire.debug
 ```
 
 __Integration tests__
+
 In addition to the unit tests, there are integration tests in the core project.
 ```
 $ mvn verify -DrunITs
@@ -86,17 +114,11 @@ To run a single integration test in debug mode (for remote debugging in an IDE) 
 $ mvn verify -DrunITs -Dit.test=<<YourIT>> -Dmaven.failsafe.debug
 ```
 
-__IntelliJ__
-
-* Don't use IntelliJ's built-in maven. Make it use the same one you use from the commandline.
-  * Project Preferences -> Build, Execution, Deployment -> Build Tools -> Maven ==> Maven home directory
-
-
 ### Contributing
 
 1. Submit a pull request, referencing the relevant [Jira case](http://jira.pentaho.com/secure/Dashboard.jspa)
 2. Attach a Git patch file to the relevant [Jira case](http://jira.pentaho.com/secure/Dashboard.jspa)
 
-Use of the Pentaho checkstyle format (via `ant checkstyle` and reviewing the report) and developing working 
+Use of the Pentaho checkstyle format (via `mvn site` and reviewing the report) and developing working 
 Unit Tests helps to ensure that pull requests for bugs and improvements are processed quickly.
 
