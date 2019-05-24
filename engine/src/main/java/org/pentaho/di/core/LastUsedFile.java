@@ -53,6 +53,8 @@ public class LastUsedFile {
 
   private boolean opened;
   private int openItemTypes;
+  
+  public String[] oi =new String[]{"cenas", "coisas", "bananas", "chouriços"};
 
   /**
    * @param fileType
@@ -96,7 +98,9 @@ public class LastUsedFile {
 
   public String toString() {
     String string = "";
-
+    
+    String xpt = string;
+    
     if ( sourceRepository && !Utils.isEmpty( directory ) && !Utils.isEmpty( repositoryName ) ) {
       string += "[" + repositoryName + "] ";
 
